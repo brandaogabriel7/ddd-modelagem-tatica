@@ -1,5 +1,4 @@
 import { Sequelize } from 'sequelize-typescript';
-import { setupSequelizeModels } from '../db/sequelize/model';
 import AddressModel from '../db/sequelize/model/address.model';
 import CustomerModel from '../db/sequelize/model/customer.model';
 import OrderItemModel from '../db/sequelize/model/order-item.model';
@@ -15,7 +14,6 @@ const createSequelizeTestInstance = (): Sequelize => {
     });
 
     sequelize.addModels([CustomerModel, AddressModel, ProductModel, OrderModel, OrderItemModel])
-    setupSequelizeModels(sequelize);
 
     return sequelize;
 }

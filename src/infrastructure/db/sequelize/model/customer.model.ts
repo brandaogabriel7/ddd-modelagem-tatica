@@ -21,5 +21,8 @@ export default class CustomerModel extends Model {
     @Column({ allowNull: false })
     declare reward_points: number;
     
+    @HasOne(() => AddressModel, {
+        foreignKey: 'customer_id'
+    })
     declare address?: AddressModel;
 }
