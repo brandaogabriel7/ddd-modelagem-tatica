@@ -1,19 +1,12 @@
-import { Sequelize } from 'sequelize-typescript';
 import Product from '../../domain/entity/product';
 import ProductRepositoryInterface from '../../domain/repository/product-repository.interface';
 import ProductModel from '../db/sequelize/model/product.model';
 
 export default class ProductRepository implements ProductRepositoryInterface {
 
-    private _productModel: typeof ProductModel;
-
-    constructor(sequelize: Sequelize) {
-        this._productModel = sequelize.models.ProductModel as typeof ProductModel;
-    }
-    
     async create(entity: Product): Promise<void> {
 
-        await this._productModel.create({
+        await ProductModel.create({
             id: entity.id,
             name: entity.name,
             price: entity.price
@@ -22,7 +15,7 @@ export default class ProductRepository implements ProductRepositoryInterface {
     
     async update(entity: Product): Promise<void> {
         
-        await this._productModel.update({
+        await ProductModel.update({
             name: entity.name,
             price: entity.price
         },
@@ -32,7 +25,7 @@ export default class ProductRepository implements ProductRepositoryInterface {
     }
     
     async find(id: string): Promise<Product> {
-        const productModel = await this._productModel.findOne({ where: { id } });
+        const productModel = await ProductModel.findOne({ where: { id } });
         
         if (!productModel) {
             throw new Error('Product not found');
@@ -46,7 +39,7 @@ export default class ProductRepository implements ProductRepositoryInterface {
     }
     
     async findAll(): Promise<Product[]> {
-        const productModels = await this._productModel.findAll();
+        const productModels = await ProductModel.findAll();
         
         return productModels.map(productModel => new Product(
             productModel.id,

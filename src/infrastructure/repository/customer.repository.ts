@@ -3,18 +3,8 @@ import CustomerRepositoryInterface from '../../domain/repository/customer-reposi
 import CustomerModel from '../db/sequelize/model/customer.model';
 import AddressModel from '../db/sequelize/model/address.model';
 import Address from '../../domain/entity/address';
-import { Sequelize } from 'sequelize-typescript';
 
 export default class CustomerRepository implements CustomerRepositoryInterface {
-    private _customerModel: typeof CustomerModel;
-    private _addressModel: typeof AddressModel;
-
-
-    constructor(sequelize: Sequelize) {
-        this._customerModel = sequelize.models.CustomerModel as typeof CustomerModel;
-        this._addressModel = sequelize.models.AddressModel as typeof AddressModel;
-    }
-
     async create(entity: Customer): Promise<void> {
 
         const customer = {
@@ -24,7 +14,7 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
             reward_points: entity.rewardPoints
         };
 
-        await this._customerModel.create(
+        await CustomerModel.create(
             entity.address ? {
                 ...customer,
                 address: {
@@ -38,12 +28,12 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
                 }
             }: customer,
             {
-                include: [this._addressModel]
+                include: CustomerModel.associations.address
             });
     }
 
     async update(entity: Customer): Promise<void> {
-        await this._customerModel.update({
+        await CustomerModel.update({
             name: entity.name,
             active: entity.isActive(),
             reward_points: entity.rewardPoints
@@ -52,10 +42,10 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
         });
 
         if (entity.address) {
-            const previousAddress = await this._addressModel.findOne(
+            const previousAddress = await AddressModel.findOne(
                 { where: { customer_id: entity.id } });
             if (!previousAddress) {
-                await this._addressModel.create({
+                await AddressModel.create({
                     customer_id: entity.id,
                     street: entity.address.street,
                     number: entity.address.number,
@@ -66,7 +56,7 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
                 });
             }
             else {
-                await this._addressModel.update({
+                await AddressModel.update({
                     street: entity.address.street,
                     number: entity.address.number,
                     zip_code: entity.address.zipCode,
@@ -81,9 +71,9 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
     }
 
     async find(id: string): Promise<Customer> {
-        const customerModel = await this._customerModel.findOne({
+        const customerModel = await CustomerModel.findOne({
             where: { id },
-            include: this._addressModel
+            include: CustomerModel.associations.address
         });
         
         if (!customerModel) {
@@ -112,8 +102,8 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
     }
     
     async findAll(): Promise<Customer[]> {
-        const customerModels = await this._customerModel.findAll({
-            include: this._addressModel
+        const customerModels = await CustomerModel.findAll({
+            include: CustomerModel.associations.address
         });
         return customerModels.map(customerModel => {
             const customer = new Customer(customerModel.id, customerModel.name);

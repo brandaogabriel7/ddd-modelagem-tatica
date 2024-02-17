@@ -14,7 +14,7 @@ describe("Customer Repository test", () => {
 
         await sequelize.sync();
 
-        customerRepository = new CustomerRepository(sequelize);
+        customerRepository = new CustomerRepository();
     });
     
     afterEach(async () => {

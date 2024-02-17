@@ -21,9 +21,9 @@ describe('Order repository tests', () => {
 
         await sequelize.sync();
 
-        orderRepository = new OrderRepository(sequelize);
-        customerRepository = new CustomerRepository(sequelize);
-        productRepository = new ProductRepository(sequelize);
+        orderRepository = new OrderRepository();
+        customerRepository = new CustomerRepository();
+        productRepository = new ProductRepository();
     });
     
     afterEach(async () => {

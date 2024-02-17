@@ -12,7 +12,7 @@ describe("Product Repository test", () => {
         sequelize = createSequelizeTestInstance();
 
         await sequelize.sync();
-        productRepository = new ProductRepository(sequelize);
+        productRepository = new ProductRepository();
     });
     
     afterEach(async () => {
