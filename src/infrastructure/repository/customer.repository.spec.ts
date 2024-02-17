@@ -4,7 +4,6 @@ import CustomerModel from '../db/sequelize/model/customer.model';
 import CustomerRepository from './customer.repository';
 import { createSequelizeTestInstance } from '../test-utils/sequelize-test-utils';
 import Address from '../../domain/entity/address';
-import AddressModel from '../db/sequelize/model/address.model';
 
 describe("Customer Repository test", () => {
     let sequelize: Sequelize;
@@ -27,13 +26,16 @@ describe("Customer Repository test", () => {
 
         await customerRepository.create(customer1);
 
-        const customerModel = await CustomerModel.findOne({where: { id: customer1.id } });
+        const customerModel = await CustomerModel.findOne({
+            where: { id: customer1.id },
+            include: CustomerModel.associations.address
+        });
 
         expect(customerModel.toJSON()).toEqualIgnoringNull({
             id: customer1.id,
             name: customer1.name,
             active: customer1.isActive(),
-            rewardPoints: customer1.rewardPoints
+            reward_points: customer1.rewardPoints
         });
 
         const customer2 = new Customer('2', 'Jane Doe');
@@ -43,19 +45,20 @@ describe("Customer Repository test", () => {
         await customerRepository.create(customer2);
 
         const customerModel2 = await CustomerModel.findOne({
-            where: { id: customer2.id }
+            where: { id: customer2.id },
+            include: CustomerModel.associations.address
         });
 
         expect(customerModel2.toJSON()).toEqualIgnoringNull({
             id: customer2.id,
             name: customer2.name,
             active: customer2.isActive(),
-            rewardPoints: customer2.rewardPoints,
+            reward_points: customer2.rewardPoints,
             address: {
-                customerId: customer2.id,
+                customer_id: customer2.id,
                 street: customer2.address.street,
                 number: customer2.address.number,
-                zipCode: customer2.address.zipCode,
+                zip_code: customer2.address.zipCode,
                 neighborhood: customer2.address.neighborhood,
                 city: customer2.address.city,
                 state: customer2.address.state
@@ -70,13 +73,16 @@ describe("Customer Repository test", () => {
 
         await customerRepository.create(customer);
 
-        const customerModel = await CustomerModel.findOne({ where: { id: customer.id } });
+        const customerModel = await CustomerModel.findOne({
+            where: { id: customer.id },
+            include: CustomerModel.associations.address
+        });
 
         expect(customerModel.toJSON()).toEqualIgnoringNull({
             id: customer.id,
             name: customer.name,
             active: customer.isActive(),
-            rewardPoints: customer.rewardPoints
+            reward_points: customer.rewardPoints
         });
 
         // update the customer, setting the address for the first time
@@ -87,19 +93,20 @@ describe("Customer Repository test", () => {
         await customerRepository.update(customer);
 
         const updatedCustomerModel = await CustomerModel.findOne({
-            where: { id: customer.id }
+            where: { id: customer.id },
+            include: CustomerModel.associations.address
         });
 
         expect(updatedCustomerModel.toJSON()).toEqualIgnoringNull({
             id: customer.id,
             name: customer.name,
             active: customer.isActive(),
-            rewardPoints: customer.rewardPoints,
+            reward_points: customer.rewardPoints,
             address: {
-                customerId: customer.id,
+                customer_id: customer.id,
                 street: customer.address.street,
                 number: customer.address.number,
-                zipCode: customer.address.zipCode,
+                zip_code: customer.address.zipCode,
                 neighborhood: customer.address.neighborhood,
                 city: customer.address.city,
                 state: customer.address.state
@@ -112,19 +119,20 @@ describe("Customer Repository test", () => {
         await customerRepository.update(customer);
 
         const updatedAgainCustomerModel = await CustomerModel.findOne({
-            where: { id: customer.id }
+            where: { id: customer.id },
+            include: CustomerModel.associations.address
         });
 
         expect(updatedAgainCustomerModel.toJSON()).toEqualIgnoringNull({
             id: customer.id,
             name: customer.name,
             active: customer.isActive(),
-            rewardPoints: customer.rewardPoints,
+            reward_points: customer.rewardPoints,
             address: {
-                customerId: customer.id,
+                customer_id: customer.id,
                 street: customer.address.street,
                 number: customer.address.number,
-                zipCode: customer.address.zipCode,
+                zip_code: customer.address.zipCode,
                 neighborhood: customer.address.neighborhood,
                 city: customer.address.city,
                 state: customer.address.state
@@ -140,12 +148,15 @@ describe("Customer Repository test", () => {
 
         const foundCustomer = await customerRepository.find(customer.id);
 
-        const customerModel = await CustomerModel.findOne({where: { id: customer.id } });
+        const customerModel = await CustomerModel.findOne({
+            where: { id: customer.id },
+            include: CustomerModel.associations.address
+        });
         expect(customerModel.toJSON()).toEqualIgnoringNull({
             id: foundCustomer.id,
             name: foundCustomer.name,
             active: foundCustomer.isActive(),
-            rewardPoints: foundCustomer.rewardPoints
+            reward_points: foundCustomer.rewardPoints
         });
 
         customer.changeAddress(new Address('Rua Paraíba', 123, '12345-678', 'Savassi', 'Belo Horizonte', 'Minas Gerais'));
@@ -156,18 +167,19 @@ describe("Customer Repository test", () => {
         const foundCustomer2 = await customerRepository.find(customer.id);
         
         const customerModel2 = await CustomerModel.findOne({
-            where: { id: customer.id }
+            where: { id: customer.id },
+            include: CustomerModel.associations.address
         });
         expect(customerModel2.toJSON()).toEqualIgnoringNull({
             id: foundCustomer2.id,
             name: foundCustomer2.name,
             active: foundCustomer2.isActive(),
-            rewardPoints: foundCustomer2.rewardPoints,
+            reward_points: foundCustomer2.rewardPoints,
             address: {
-                customerId: foundCustomer2.id,
+                customer_id: foundCustomer2.id,
                 street: foundCustomer2.address.street,
                 number: foundCustomer2.address.number,
-                zipCode: foundCustomer2.address.zipCode,
+                zip_code: foundCustomer2.address.zipCode,
                 neighborhood: foundCustomer2.address.neighborhood,
                 city: foundCustomer2.address.city,
                 state: foundCustomer2.address.state

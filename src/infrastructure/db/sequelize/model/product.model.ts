@@ -2,7 +2,8 @@ import { Column, PrimaryKey, Table, Model } from 'sequelize-typescript';
 
 @Table({
     tableName: 'products',
-    timestamps: false
+    timestamps: false,
+    name: { singular: 'product', plural: 'products' }
 })
 export default class ProductModel extends Model {
     

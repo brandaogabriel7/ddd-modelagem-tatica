@@ -1,9 +1,10 @@
-import { Column, PrimaryKey, Table, Model } from 'sequelize-typescript';
+import { Column, PrimaryKey, Table, Model, HasOne } from 'sequelize-typescript';
 import AddressModel from './address.model';
 
 @Table({
     tableName: 'customers',
-    timestamps: false
+    timestamps: false,
+    name: { singular: 'customer', plural: 'customers' }
 })
 export default class CustomerModel extends Model {
     
@@ -18,8 +19,7 @@ export default class CustomerModel extends Model {
     declare active: boolean;
 
     @Column({ allowNull: false })
-    declare rewardPoints: number;
-
+    declare reward_points: number;
+    
     declare address?: AddressModel;
-
 }

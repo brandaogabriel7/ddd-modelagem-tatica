@@ -21,24 +21,24 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
             id: entity.id,
             name: entity.name,
             active: entity.isActive(),
-            rewardPoints: entity.rewardPoints
+            reward_points: entity.rewardPoints
         };
 
         await this._customerModel.create(
             entity.address ? {
                 ...customer,
                 address: {
-                    customerId: entity.id,
+                    customer_id: entity.id,
                     street: entity.address.street,
                     number: entity.address.number,
-                    zipCode: entity.address.zipCode,
+                    zip_code: entity.address.zipCode,
                     neighborhood: entity.address.neighborhood,
                     city: entity.address.city,
                     state: entity.address.state
                 }
             }: customer,
             {
-                include: [{ model:this._addressModel, as: 'address' }]
+                include: [this._addressModel]
             });
     }
 
@@ -46,19 +46,20 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
         await this._customerModel.update({
             name: entity.name,
             active: entity.isActive(),
-            rewardPoints: entity.rewardPoints
+            reward_points: entity.rewardPoints
         }, {
             where: { id: entity.id }
         });
 
         if (entity.address) {
-            const previousAddress = await this._addressModel.findOne({ where: { customerId: entity.id } });
+            const previousAddress = await this._addressModel.findOne(
+                { where: { customer_id: entity.id } });
             if (!previousAddress) {
                 await this._addressModel.create({
-                    customerId: entity.id,
+                    customer_id: entity.id,
                     street: entity.address.street,
                     number: entity.address.number,
-                    zipCode: entity.address.zipCode,
+                    zip_code: entity.address.zipCode,
                     neighborhood: entity.address.neighborhood,
                     city: entity.address.city,
                     state: entity.address.state
@@ -68,12 +69,12 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
                 await this._addressModel.update({
                     street: entity.address.street,
                     number: entity.address.number,
-                    zipCode: entity.address.zipCode,
+                    zip_code: entity.address.zipCode,
                     neighborhood: entity.address.neighborhood,
                     city: entity.address.city,
                     state: entity.address.state
                 }, {
-                    where: { customerId: entity.id }
+                    where: { customer_id: entity.id }
                 });
             }
         }
@@ -81,7 +82,8 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
 
     async find(id: string): Promise<Customer> {
         const customerModel = await this._customerModel.findOne({
-            where: { id }
+            where: { id },
+            include: this._addressModel
         });
         
         if (!customerModel) {
@@ -93,7 +95,7 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
             customer.changeAddress(new Address(
                 customerModel.address.street,
                 customerModel.address.number,
-                customerModel.address.zipCode,
+                customerModel.address.zip_code,
                 customerModel.address.neighborhood,
                 customerModel.address.city,
                 customerModel.address.state));
@@ -110,14 +112,16 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
     }
     
     async findAll(): Promise<Customer[]> {
-        const customerModels = await this._customerModel.findAll();
+        const customerModels = await this._customerModel.findAll({
+            include: this._addressModel
+        });
         return customerModels.map(customerModel => {
             const customer = new Customer(customerModel.id, customerModel.name);
             if (customerModel.address) {
                 customer.changeAddress(new Address(
                     customerModel.address.street,
                     customerModel.address.number,
-                    customerModel.address.zipCode,
+                    customerModel.address.zip_code,
                     customerModel.address.neighborhood,
                     customerModel.address.city,
                     customerModel.address.state));

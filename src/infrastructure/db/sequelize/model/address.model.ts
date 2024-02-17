@@ -1,16 +1,15 @@
-import { Column, PrimaryKey, Model, ForeignKey, Table } from 'sequelize-typescript';
-import CustomerModel from './customer.model';
+import { Column, PrimaryKey, Model, Table } from 'sequelize-typescript';
 
 @Table({
     tableName: 'addresses',
-    timestamps: false
+    timestamps: false,
+    name: { singular: 'address', plural: 'addresses' }
 })
 export default class AddressModel extends Model {
-    
+
     @PrimaryKey
-    @ForeignKey(() => CustomerModel)
-    @Column
-    declare customerId: string;
+    @Column({ allowNull: false })
+    declare customer_id: string;
 
     @Column({ allowNull: false })
     declare street: string;
@@ -19,7 +18,7 @@ export default class AddressModel extends Model {
     declare number: number;
     
     @Column({ allowNull: false })
-    declare zipCode: string;
+    declare zip_code: string;
 
     @Column({ allowNull: false })
     declare neighborhood: string;
@@ -29,5 +28,4 @@ export default class AddressModel extends Model {
 
     @Column({ allowNull: false })
     declare state: string;
-
 }
