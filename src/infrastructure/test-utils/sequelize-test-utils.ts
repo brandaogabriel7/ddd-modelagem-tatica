@@ -13,8 +13,6 @@ const createSequelizeTestInstance = (): Sequelize => {
         sync: { force: true }
     });
 
-    sequelize.addModels([CustomerModel, AddressModel, ProductModel, OrderModel, OrderItemModel])
-
     return sequelize;
 }
 

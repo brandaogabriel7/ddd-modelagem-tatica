@@ -4,6 +4,7 @@ import CustomerModel from '../db/sequelize/model/customer.model';
 import CustomerRepository from './customer.repository';
 import { createSequelizeTestInstance } from '../test-utils/sequelize-test-utils';
 import Address from '../../domain/entity/address';
+import AddressModel from '../db/sequelize/model/address.model';
 
 describe("Customer Repository test", () => {
     let sequelize: Sequelize;
@@ -11,6 +12,8 @@ describe("Customer Repository test", () => {
 
     beforeEach(async () => {
         sequelize = createSequelizeTestInstance();
+
+        sequelize.addModels([CustomerModel, AddressModel]);
 
         await sequelize.sync();
 

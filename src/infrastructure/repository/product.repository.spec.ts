@@ -10,6 +10,7 @@ describe("Product Repository test", () => {
 
     beforeEach(async () => {
         sequelize = createSequelizeTestInstance();
+        sequelize.addModels([ProductModel]);
 
         await sequelize.sync();
         productRepository = new ProductRepository();

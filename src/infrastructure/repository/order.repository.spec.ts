@@ -9,6 +9,10 @@ import ProductRepository from './product.repository';
 import OrderItem from '../../domain/entity/order-item';
 import Order from '../../domain/entity/order';
 import OrderModel from '../db/sequelize/model/order.model';
+import CustomerModel from '../db/sequelize/model/customer.model';
+import OrderItemModel from '../db/sequelize/model/order-item.model';
+import ProductModel from '../db/sequelize/model/product.model';
+import AddressModel from '../db/sequelize/model/address.model';
 
 describe('Order repository tests', () => {
     let sequelize: Sequelize;
@@ -18,6 +22,8 @@ describe('Order repository tests', () => {
 
     beforeEach(async () => {
         sequelize = createSequelizeTestInstance();
+
+        sequelize.addModels([OrderModel, AddressModel, CustomerModel, ProductModel, OrderItemModel]);
 
         await sequelize.sync();
 
