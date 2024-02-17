@@ -26,7 +26,7 @@ describe("Customer unit tests", () => {
     it("should activate the customer", () => {
         const customer = new Customer('123', 'John Doe');
 
-        const address = new Address("Rua dos Jacarandás", 3, "12345-678", "São Paulo", "SP");
+        const address = new Address("Rua dos Jacarandás", 3, "12345-678", "Paraíso", "São Paulo", "SP");
         customer.changeAddress(address);
 
         customer.activate();
@@ -34,7 +34,7 @@ describe("Customer unit tests", () => {
         expect(customer.isActive()).toBe(true);
     });
 
-    it("should throw error when client has no address", () => {
+    it("should throw error when trying to activate client that has no address", () => {
         
         expect(() => {
             const customer = new Customer('123', 'John Doe');

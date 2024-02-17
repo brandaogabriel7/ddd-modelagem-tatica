@@ -37,7 +37,7 @@ describe("Customer Repository test", () => {
         });
 
         const customer2 = new Customer('2', 'Jane Doe');
-        customer2.changeAddress(new Address('Rua Paraíba', 123, '12345-678', 'Savassi', 'Belo Horizonte'));
+        customer2.changeAddress(new Address('Rua Paraíba', 123, '12345-678', 'Savassi', 'Belo Horizonte', 'Minas Gerais'));
         customer2.activate();
 
         await customerRepository.create(customer2);
@@ -56,6 +56,7 @@ describe("Customer Repository test", () => {
                 street: customer2.address.street,
                 number: customer2.address.number,
                 zipCode: customer2.address.zipCode,
+                neighborhood: customer2.address.neighborhood,
                 city: customer2.address.city,
                 state: customer2.address.state
             }
@@ -80,7 +81,7 @@ describe("Customer Repository test", () => {
 
         // update the customer, setting the address for the first time
         customer.changeName('Jane Doe');
-        customer.changeAddress(new Address('Rua Paraíba', 123, '12345-678', 'Savassi', 'Belo Horizonte'));
+        customer.changeAddress(new Address('Rua Paraíba', 123, '12345-678', 'Savassi', 'Belo Horizonte', 'Minas Gerais'));
         customer.activate();
 
         await customerRepository.update(customer);
@@ -99,13 +100,14 @@ describe("Customer Repository test", () => {
                 street: customer.address.street,
                 number: customer.address.number,
                 zipCode: customer.address.zipCode,
+                neighborhood: customer.address.neighborhood,
                 city: customer.address.city,
                 state: customer.address.state
             }
         });
 
         // updating the existing address
-        customer.changeAddress(new Address('Rua Brasília', 456, '12345-678', 'Savassi', 'Belo Horizonte'));
+        customer.changeAddress(new Address('Rua Brasília', 456, '12345-678', 'Savassi', 'Belo Horizonte', 'Minas Gerais'));
 
         await customerRepository.update(customer);
 
@@ -123,6 +125,7 @@ describe("Customer Repository test", () => {
                 street: customer.address.street,
                 number: customer.address.number,
                 zipCode: customer.address.zipCode,
+                neighborhood: customer.address.neighborhood,
                 city: customer.address.city,
                 state: customer.address.state
             }
@@ -145,7 +148,7 @@ describe("Customer Repository test", () => {
             rewardPoints: foundCustomer.rewardPoints
         });
 
-        customer.changeAddress(new Address('Rua Paraíba', 123, '12345-678', 'Savassi', 'Belo Horizonte'));
+        customer.changeAddress(new Address('Rua Paraíba', 123, '12345-678', 'Savassi', 'Belo Horizonte', 'Minas Gerais'));
         customer.activate();
 
         await customerRepository.update(customer);
@@ -165,6 +168,7 @@ describe("Customer Repository test", () => {
                 street: foundCustomer2.address.street,
                 number: foundCustomer2.address.number,
                 zipCode: foundCustomer2.address.zipCode,
+                neighborhood: foundCustomer2.address.neighborhood,
                 city: foundCustomer2.address.city,
                 state: foundCustomer2.address.state
             }
@@ -176,7 +180,7 @@ describe("Customer Repository test", () => {
         await customerRepository.create(customer1);
 
         const customer2 = new Customer('2', 'Jane Doe');
-        customer2.changeAddress(new Address('Rua Paraíba', 123, '12345-678', 'Savassi', 'Belo Horizonte'));
+        customer2.changeAddress(new Address('Rua Paraíba', 123, '12345-678', 'Savassi', 'Belo Horizonte', 'Minas Gerais'));
         customer2.activate();
         await customerRepository.create(customer2);
 

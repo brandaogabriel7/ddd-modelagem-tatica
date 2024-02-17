@@ -32,6 +32,7 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
                     street: entity.address.street,
                     number: entity.address.number,
                     zipCode: entity.address.zipCode,
+                    neighborhood: entity.address.neighborhood,
                     city: entity.address.city,
                     state: entity.address.state
                 }
@@ -58,6 +59,7 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
                     street: entity.address.street,
                     number: entity.address.number,
                     zipCode: entity.address.zipCode,
+                    neighborhood: entity.address.neighborhood,
                     city: entity.address.city,
                     state: entity.address.state
                 });
@@ -67,6 +69,7 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
                     street: entity.address.street,
                     number: entity.address.number,
                     zipCode: entity.address.zipCode,
+                    neighborhood: entity.address.neighborhood,
                     city: entity.address.city,
                     state: entity.address.state
                 }, {
@@ -87,7 +90,13 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
         
         const customer = new Customer(customerModel.id, customerModel.name);
         if (customerModel.address) {
-            customer.changeAddress(new Address(customerModel.address.street, customerModel.address.number, customerModel.address.zipCode, customerModel.address.city, customerModel.address.state));
+            customer.changeAddress(new Address(
+                customerModel.address.street,
+                customerModel.address.number,
+                customerModel.address.zipCode,
+                customerModel.address.neighborhood,
+                customerModel.address.city,
+                customerModel.address.state));
         }
         
         if (customerModel.active) {
@@ -105,7 +114,13 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
         return customerModels.map(customerModel => {
             const customer = new Customer(customerModel.id, customerModel.name);
             if (customerModel.address) {
-                customer.changeAddress(new Address(customerModel.address.street, customerModel.address.number, customerModel.address.zipCode, customerModel.address.city, customerModel.address.state));
+                customer.changeAddress(new Address(
+                    customerModel.address.street,
+                    customerModel.address.number,
+                    customerModel.address.zipCode,
+                    customerModel.address.neighborhood,
+                    customerModel.address.city,
+                    customerModel.address.state));
             }
             
             if (customerModel.active) {

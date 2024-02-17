@@ -22,6 +22,9 @@ export default class AddressModel extends Model {
     declare zipCode: string;
 
     @Column({ allowNull: false })
+    declare neighborhood: string;
+
+    @Column({ allowNull: false })
     declare city: string;
 
     @Column({ allowNull: false })
