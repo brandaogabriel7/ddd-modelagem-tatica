@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
-import { createSequelizeTestInstance } from '../__mocks__/sequelize-test-utils';
+import { createSequelizeTestInstance } from './__mocks__/sequelize.mock';
 import OrderRepository from './order.repository';
 import Customer from '../../domain/entity/customer';
 import Address from '../../domain/entity/address';

@@ -14,6 +14,9 @@ export default class ProductRepository implements ProductRepositoryInterface {
     }
     
     async update(entity: Product): Promise<void> {
+        if (!await ProductModel.findOne({ where: { id: entity.id } })) {
+            throw new Error('Product not found');
+        }
         
         await ProductModel.update({
             name: entity.name,

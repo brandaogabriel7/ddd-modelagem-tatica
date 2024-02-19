@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import ProductModel from '../db/sequelize/model/product.model';
 import Product from '../../domain/entity/product';
 import ProductRepository from './product.repository';
-import { createSequelizeTestInstance } from '../__mocks__/sequelize-test-utils';
+import { addRandomTestProductsToDatabase, createSequelizeTestInstance } from './__mocks__/sequelize.mock';
 
 describe("Product Repository test", () => {
     let sequelize: Sequelize;
@@ -35,6 +35,8 @@ describe("Product Repository test", () => {
     });
 
     it("should update a product", async () => {
+        await addRandomTestProductsToDatabase();
+
         const product = new Product('1', 'Product 1', 100);
 
         await productRepository.create(product);
@@ -52,16 +54,29 @@ describe("Product Repository test", () => {
 
         await productRepository.update(product);
 
-        const updatedProductModel = await ProductModel.findOne({ where: { id: product.id } });
+        const productsModels = await ProductModel.findAll();
 
-        expect(updatedProductModel.toJSON()).toStrictEqual({
-            id: '1',
-            name: 'Product 2',
-            price: 200
-        });
+        for (const productModel of productsModels) {
+            if (productModel.id === product.id) {
+                expect(productModel.toJSON()).toStrictEqual({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price
+                });
+            }
+            else {
+                // this makes sure the update was made only to the product we wanted to update
+                expect(productModel.toJSON()).not.toBeContainedEqual({
+                    name: product.name,
+                    price: product.price
+                });
+            }
+        }
     });
 
     it("should find a product", async () => {
+        await addRandomTestProductsToDatabase();
+
         const product = new Product('1', 'Product 1', 100);
 
         await productRepository.create(product);
@@ -91,7 +106,16 @@ describe("Product Repository test", () => {
     });
 
     it("should throw an error when trying to find a non-existing product", async () => {
+        await addRandomTestProductsToDatabase();
+        
         await expect(productRepository.find('1')).rejects.toThrow('Product not found');
     });
 
+    it("should throw an error when trying to update a non-existing product", async () => {
+        await addRandomTestProductsToDatabase();
+
+        const product = new Product('1', 'Product 1', 100);
+
+        await expect(productRepository.update(product)).rejects.toThrow('Product not found');
+    });
 });
