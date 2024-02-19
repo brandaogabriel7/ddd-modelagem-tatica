@@ -1,3 +1,4 @@
+import { addRandomTestCustomersToDatabase } from '../../infrastructure/repository/__mocks__/sequelize.mock';
 import Address from "./address";
 import Customer from "./customer";
 
@@ -83,6 +84,28 @@ describe("Customer unit tests", () => {
 
         customer.addRewardPoints(5);
         expect(customer.rewardPoints).toBe(15);
+    });
+
+    it('should throw an error when trying to remove the address from an active customer', () => {
+        expect(() => {
+            const customer = new Customer('1', 'John Doe');
+            customer.changeAddress(
+                new Address("Rua dos Jacarandás", 3, "12345-678", "Paraíso", "São Paulo", "SP")
+            );
+            customer.activate();
+
+            customer.changeAddress(undefined);
+        }).toThrow('Cannot remove address from an active customer');
+
+        expect(() => {
+            const customer = new Customer('1', 'John Doe');
+            customer.changeAddress(
+                new Address("Rua dos Jacarandás", 3, "12345-678", "Paraíso", "São Paulo", "SP")
+            );
+            customer.activate();
+
+            customer.changeAddress(null);
+        }).toThrow('Cannot remove address from an active customer');
     });
 
 });

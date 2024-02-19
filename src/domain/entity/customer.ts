@@ -30,6 +30,9 @@ export default class Customer {
     }
 
     changeAddress(address: Address) {
+        if (this.isActive() && !address) {
+            throw new Error('Cannot remove address from an active customer');
+        }
         this._address = address;
     }
 
