@@ -87,26 +87,14 @@ export default class OrderRepository implements OrderRepositoryInterface {
         return async (t: Transaction) => {
 
             for (const item of entity.items) {
-                const existingItem = orderModel.items.find(i => i.id === item.id);
-                if (existingItem) {
-                    await existingItem.update({
-                        product_id: item.productId,
-                        name: item.name,
-                        price: item.price,
-                        quantity: item.quantity
-                    }, { transaction: t });
-                }
-                else {
-                    await OrderItemModel.create({
-                        id: item.id,
-                        product_id: item.productId,
-                        order_id: entity.id,
-                        name: item.name,
-                        price: item.price,
-                        quantity: item.quantity
-                    }, { transaction: t });
-                }
-    
+                await OrderItemModel.upsert({
+                    id: item.id,
+                    product_id: item.productId,
+                    order_id: entity.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity
+                }, { transaction: t });    
             }
 
             for (const item of orderModel.items) {

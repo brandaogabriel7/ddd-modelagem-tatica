@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import Customer from '../../domain/entity/customer';
 import CustomerModel from '../db/sequelize/model/customer.model';
 import CustomerRepository from './customer.repository';
-import { createSequelizeTestInstance } from '../test-utils/sequelize-test-utils';
+import { createSequelizeTestInstance } from '../__mocks__/sequelize-test-utils';
 import Address from '../../domain/entity/address';
 import AddressModel from '../db/sequelize/model/address.model';
 
@@ -142,6 +142,12 @@ describe("Customer Repository test", () => {
             }
         });
 
+    });
+
+    it('should not update a non-existing customer', async () => {
+        const customer = new Customer('1', 'John Doe');
+
+        await expect(customerRepository.update(customer)).rejects.toThrow('Customer not found');
     });
 
     it("should find a customer", async () => {

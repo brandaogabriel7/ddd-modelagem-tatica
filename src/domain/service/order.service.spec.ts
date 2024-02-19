@@ -6,7 +6,6 @@ import OrderService from './order.service';
 describe("Order service unit tests", () => {
 
     it("should place an order", () => {
-
         const customer = new Customer("c1", "Customer 1");
         const item1 = new OrderItem("i1", "p1", "Product 1", 10, 1);
 
@@ -14,7 +13,6 @@ describe("Order service unit tests", () => {
 
         expect(customer.rewardPoints).toBe(5);
         expect(order.total()).toBe(10);
-
     });
 
     it("should get total of all orders", () => {

@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import ProductModel from '../db/sequelize/model/product.model';
 import Product from '../../domain/entity/product';
 import ProductRepository from './product.repository';
-import { createSequelizeTestInstance } from '../test-utils/sequelize-test-utils';
+import { createSequelizeTestInstance } from '../__mocks__/sequelize-test-utils';
 
 describe("Product Repository test", () => {
     let sequelize: Sequelize;

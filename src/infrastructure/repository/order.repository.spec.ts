@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
-import { createSequelizeTestInstance } from '../test-utils/sequelize-test-utils';
+import { createSequelizeTestInstance } from '../__mocks__/sequelize-test-utils';
 import OrderRepository from './order.repository';
 import Customer from '../../domain/entity/customer';
 import Address from '../../domain/entity/address';
@@ -144,6 +144,44 @@ describe('Order repository tests', () => {
                 }
             ]
         });
+
+        order.updateItems([newOrderItem]);
+
+        await orderRepository.update(order);
+
+        const updatedOrderModel = await OrderModel.findOne({
+            where: { id: order.id },
+            include: OrderModel.associations.items
+        });
+
+        expect(updatedOrderModel.toJSON()).toStrictEqual({
+            id: order.id,
+            customer_id: customer.id,
+            total: order.total(),
+            items: [
+                {
+                    id: newOrderItem.id,
+                    order_id: order.id,
+                    product_id: newOrderItem.productId,
+                    name: newOrderItem.name,
+                    price: newOrderItem.price,
+                    quantity: newOrderItem.quantity
+                }
+            ]
+        });
+    });
+
+    it('should throw an error when trying to update a non-existing order', async () => {
+        const orderItem = new OrderItem(
+            '1',
+            '123',
+            'Product 1',
+            100,
+            2
+        );
+        const order = new Order('123', '123', [orderItem]);
+
+        await expect(orderRepository.update(order)).rejects.toThrow('Order not found');
     });
 
     it('should find an existing order', async () => {
