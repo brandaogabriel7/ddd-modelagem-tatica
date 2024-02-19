@@ -1,6 +1,6 @@
 import { BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table } from 'sequelize-typescript';
-import OrderModel from './order.model';
 import ProductModel from './product.model';
+import OrderModel from './order.model';
 
 @Table({
     tableName: 'order_items',
@@ -20,11 +20,7 @@ export default class OrderItemModel extends Model {
     declare product: ProductModel;
 
     @ForeignKey(() => OrderModel)
-    @Column({ allowNull: false })
     declare order_id: string;
-
-    @BelongsTo(() => OrderModel)
-    declare order: OrderModel;
 
     @Column({ allowNull: false })
     declare name: string;

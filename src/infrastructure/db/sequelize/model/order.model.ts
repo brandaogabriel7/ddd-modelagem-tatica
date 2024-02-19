@@ -23,6 +23,8 @@ export default class OrderModel extends Model {
     @Column({ allowNull: false })
     declare total: number;
 
-    @HasMany(() => OrderItemModel)
+    @HasMany(() => OrderItemModel, {
+        foreignKey: 'order_id'
+    })
     declare items: OrderItemModel[];
 }
