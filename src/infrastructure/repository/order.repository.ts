@@ -3,6 +3,7 @@ import Order from '../../domain/entity/order';
 import OrderRepositoryInterface from '../../domain/repository/order-repository.interface';
 import OrderItemModel from '../db/sequelize/model/order-item.model';
 import OrderModel from '../db/sequelize/model/order.model';
+import OrderItem from '../../domain/entity/order-item';
 
 export default class OrderRepository implements OrderRepositoryInterface {
 
@@ -37,11 +38,45 @@ export default class OrderRepository implements OrderRepositoryInterface {
             this._updateOrderTransaction(entity, orderModel));
     }
 
-    find(id: string): Promise<Order> {
-        throw new Error('Method not implemented.');
+    async find(id: string): Promise<Order> {
+        const orderModel = await OrderModel.findOne({
+            where: { id: id},
+            include: OrderModel.associations.items
+        });
+
+        if (!orderModel) {
+            throw new Error('Order not found');
+        }
+
+        return new Order(
+            orderModel.id,
+            orderModel.customer_id,
+            orderModel.items.map(item => new OrderItem(
+                item.id,
+                item.product_id,
+                item.name,
+                item.price,
+                item.quantity
+            ))
+        );
     }
-    findAll(): Promise<Order[]> {
-        throw new Error('Method not implemented.');
+
+    async findAll(): Promise<Order[]> {
+        const orderModels = await OrderModel.findAll({
+            include: OrderModel.associations.items
+        });
+        
+        return orderModels.map(orderModel => new Order(
+            orderModel.id,
+            orderModel.customer_id,
+            orderModel.items.map(item => new OrderItem(
+                item.id,
+                item.product_id,
+                item.name,
+                item.price,
+                item.quantity
+            ))
+        ));
     }
 
     private _updateOrderTransaction(
@@ -73,7 +108,7 @@ export default class OrderRepository implements OrderRepositoryInterface {
                 }
     
             }
-            
+
             for (const item of orderModel.items) {
                 if (!entity.items.some(i => i.id === item.id)) {
                     await item.destroy({ transaction: t });
