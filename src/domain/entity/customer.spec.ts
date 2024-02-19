@@ -46,6 +46,15 @@ describe("Customer unit tests", () => {
     it("should deactivate the customer", () => {
         const customer = new Customer('123', 'John Doe');
 
+        expect(customer.isActive()).toBe(false);
+
+        customer.changeAddress(
+            new Address("Rua dos Jacarandás", 3, "12345-678", "Paraíso", "São Paulo", "SP")
+        );
+        customer.activate();
+
+        expect(customer.isActive()).toBe(true);
+
         customer.deactivate();
 
         expect(customer.isActive()).toBe(false);
