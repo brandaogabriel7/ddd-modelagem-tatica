@@ -3,6 +3,7 @@ import CustomerRepositoryInterface from '../../domain/repository/customer-reposi
 import CustomerModel from '../db/sequelize/model/customer.model';
 import AddressModel from '../db/sequelize/model/address.model';
 import Address from '../../domain/entity/address';
+import { Transaction } from 'sequelize';
 
 export default class CustomerRepository implements CustomerRepositoryInterface {
     async create(entity: Customer): Promise<void> {
@@ -33,41 +34,17 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
     }
 
     async update(entity: Customer): Promise<void> {
-        await CustomerModel.update({
-            name: entity.name,
-            active: entity.isActive(),
-            reward_points: entity.rewardPoints
-        }, {
-            where: { id: entity.id }
+
+        const customerModel = await CustomerModel.findOne({
+            where: { id: entity.id },
+            include: CustomerModel.associations.address
         });
 
-        if (entity.address) {
-            const previousAddress = await AddressModel.findOne(
-                { where: { customer_id: entity.id } });
-            if (!previousAddress) {
-                await AddressModel.create({
-                    customer_id: entity.id,
-                    street: entity.address.street,
-                    number: entity.address.number,
-                    zip_code: entity.address.zipCode,
-                    neighborhood: entity.address.neighborhood,
-                    city: entity.address.city,
-                    state: entity.address.state
-                });
-            }
-            else {
-                await AddressModel.update({
-                    street: entity.address.street,
-                    number: entity.address.number,
-                    zip_code: entity.address.zipCode,
-                    neighborhood: entity.address.neighborhood,
-                    city: entity.address.city,
-                    state: entity.address.state
-                }, {
-                    where: { customer_id: entity.id }
-                });
-            }
+        if (!customerModel) {
+            throw new Error('Customer not found');
         }
+
+        await CustomerModel.sequelize.transaction(this._updateCustomerTransaction(entity));
     }
 
     async find(id: string): Promise<Customer> {
@@ -127,4 +104,37 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
         });
     }
     
+    private _updateCustomerTransaction(
+        entity: Customer
+    ): (t: Transaction) => PromiseLike<void> {
+        return async (t: Transaction) => {
+            if (entity.address) {
+                await AddressModel.upsert({
+                    customer_id: entity.id,
+                    street: entity.address.street,
+                    number: entity.address.number,
+                    zip_code: entity.address.zipCode,
+                    neighborhood: entity.address.neighborhood,
+                    city: entity.address.city,
+                    state: entity.address.state
+                }, { transaction: t });
+            }
+            else {
+                await AddressModel.destroy({
+                    where: { customer_id: entity.id },
+                    transaction: t
+                });
+            }
+
+            await CustomerModel.update({
+                name: entity.name,
+                active: entity.isActive(),
+                reward_points: entity.rewardPoints
+            }, {
+                where: { id: entity.id },
+                transaction: t
+            });
+        };
+    }
+
 }

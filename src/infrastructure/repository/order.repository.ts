@@ -35,12 +35,6 @@ export default class OrderRepository implements OrderRepositoryInterface {
 
         await OrderModel.sequelize.transaction(
             this._updateOrderTransaction(entity, orderModel));
-
-        await orderModel.update({
-            customer_id: entity.customerId,
-            total: entity.total()
-        });
-
     }
 
     find(id: string): Promise<Order> {
@@ -78,17 +72,18 @@ export default class OrderRepository implements OrderRepositoryInterface {
                     }, { transaction: t });
                 }
     
-                for (const item of orderModel.items) {
-                    if (!entity.items.some(i => i.id === item.id)) {
-                        await item.destroy({ transaction: t });
-                    }
-                }
-    
-                await orderModel.update({
-                    customer_id: entity.customerId,
-                    total: entity.total()
-                }, { transaction: t });
             }
+            
+            for (const item of orderModel.items) {
+                if (!entity.items.some(i => i.id === item.id)) {
+                    await item.destroy({ transaction: t });
+                }
+            }
+
+            await orderModel.update({
+                customer_id: entity.customerId,
+                total: entity.total()
+            }, { transaction: t });
         };
     }
 
