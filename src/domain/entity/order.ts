@@ -24,9 +24,6 @@ export default class Order {
         if (this._items.length === 0) {
             throw new Error('Order must have at least one item');
         }
-        if (this._items.some(item => item.quantity <= 0)) {
-            throw new Error('Quantity must be greater than 0');
-        }
     }
 
     get id(): string {

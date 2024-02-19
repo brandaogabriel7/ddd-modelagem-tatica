@@ -32,25 +32,4 @@ describe("Order unit tests", () => {
 
         expect(order2.total()).toBe(800);
     });
-
-    it("should throw an error if item quantity is less or equal to 0", () => {
-        expect(() => {
-            new Order('Order 123', 'Customer 123',[
-                new OrderItem('I123', 'p1', 'Item 1', 100, 0)
-            ]);
-        }).toThrow('Quantity must be greater than 0');
-
-        expect(() => {
-            new Order('Order 123', 'Customer 123',[
-                new OrderItem('I123', 'p1', 'Item 1', 100, -3)
-            ]);
-        }).toThrow('Quantity must be greater than 0');
-
-        expect(() => {
-            new Order('Order 123', 'Customer 123',[
-                new OrderItem('I123', 'p1', 'Item 1', 100, 2),
-                new OrderItem('I456', 'p2', 'Item 2', 200, -3)
-            ]);
-        }).toThrow('Quantity must be greater than 0');
-    });
 });
