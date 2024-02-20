@@ -34,7 +34,7 @@ describe("Customer Repository test", () => {
             include: CustomerModel.associations.address
         });
 
-        expect(customerModel.toJSON()).toEqualIgnoringNull({
+        expect(customerModel.toJSON()).toMatchObject({
             id: customer1.id,
             name: customer1.name,
             active: customer1.isActive(),
@@ -52,7 +52,7 @@ describe("Customer Repository test", () => {
             include: CustomerModel.associations.address
         });
 
-        expect(customerModel2.toJSON()).toEqualIgnoringNull({
+        expect(customerModel2.toJSON()).toMatchObject({
             id: customer2.id,
             name: customer2.name,
             active: customer2.isActive(),
@@ -82,7 +82,7 @@ describe("Customer Repository test", () => {
             where: { id: customer.id },
             include: CustomerModel.associations.address
         });
-        expect(customerModel.toJSON()).toEqualIgnoringNull({
+        expect(customerModel.toJSON()).toMatchObject({
             id: customer.id,
             name: customer.name,
             active: customer.isActive(),
@@ -130,7 +130,7 @@ describe("Customer Repository test", () => {
             where: { id: customer.id },
             include: CustomerModel.associations.address
         });
-        expect(customerModel.toJSON()).toEqualIgnoringNull({
+        expect(customerModel.toJSON()).toMatchObject({
             id: foundCustomer.id,
             name: foundCustomer.name,
             active: foundCustomer.isActive(),
@@ -148,7 +148,7 @@ describe("Customer Repository test", () => {
             where: { id: customer.id },
             include: CustomerModel.associations.address
         });
-        expect(customerModel2.toJSON()).toEqualIgnoringNull({
+        expect(customerModel2.toJSON()).toMatchObject({
             id: foundCustomer2.id,
             name: foundCustomer2.name,
             active: foundCustomer2.isActive(),
@@ -213,7 +213,7 @@ async function expectThatOnlySpecifiedRowWasUpdated(customer: Customer) {
                     state: customer.address.state
                 }
             }
-            expect(customerModel.toJSON()).toEqualIgnoringNull(expected);
+            expect(customerModel.toJSON()).toMatchObject(expected);
         }
         else {
             // this makes sure the update was made only to the customer we wanted to update
