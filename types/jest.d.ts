@@ -1,6 +1,5 @@
 declare namespace jest {
-    interface Matchers<R> {
-      toBeContainedEqual(expected: any): R;
-    }
+  interface Matchers<R> {
+    toBeContainedEqual(expected: any): R;
   }
-  
+}

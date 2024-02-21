@@ -1,5 +1,4 @@
 export default interface EventInterface<T = any> {
-    
-    dateTimeOccured: Date;
-    eventData: T;
+  dateTimeOccured: Date;
+  eventData: T;
 }

@@ -1,56 +1,61 @@
 export default class OrderItem {
+  private _id: string;
+  private _productId: string;
+  private _name: string;
+  private _price: number;
+  private _quantity: number;
 
-    private _id: string;
-    private _productId: string;
-    private _name: string;
-    private _price: number;
-    private _quantity: number;
+  constructor(
+    id: string,
+    productId: string,
+    name: string,
+    price: number,
+    quantity: number,
+  ) {
+    this._id = id;
+    this._productId = productId;
+    this._name = name;
+    this._price = price;
+    this._quantity = quantity;
 
-    constructor(id: string, productId: string, name: string, price: number, quantity: number) {
-        this._id = id;
-        this._productId = productId;
-        this._name = name;
-        this._price = price;
-        this._quantity = quantity;
+    this._validate();
+  }
 
-        this._validate();
+  private _validate() {
+    if (!this._id) {
+      throw new Error('ID is required');
     }
-
-    private _validate() {
-        if (!this._id) {
-            throw new Error('ID is required');
-        }
-        if (!this._productId) {
-            throw new Error('Product ID is required');
-        }
-        if (!this._name) {
-            throw new Error('Name is required');
-        }
-        if (this._price <= 0) {
-            throw new Error('Price must be greater than 0');
-        }
-        if (this._quantity <= 0) {
-            throw new Error('Quantity must be greater than 0');
-        }
+    if (!this._productId) {
+      throw new Error('Product ID is required');
     }
-
-    get id(): string {
-        return this._id;
+    if (!this._name) {
+      throw new Error('Name is required');
     }
-
-    get name(): string {
-        return this._name;
+    if (this._price <= 0) {
+      throw new Error('Price must be greater than 0');
     }
-
-    get price(): number {
-        return this._price;
+    if (this._quantity <= 0) {
+      throw new Error('Quantity must be greater than 0');
     }
+  }
 
-    get quantity(): number {
-        return this._quantity;
-    }
+  get id(): string {
+    return this._id;
+  }
 
-    get productId(): string {
-        return this._productId;
-    }
+  get name(): string {
+    return this._name;
+  }
+
+  get price(): number {
+    return this._price;
+  }
+
+  get quantity(): number {
+    return this._quantity;
+  }
+
+  get productId(): string {
+    return this._productId;
+  }
 }

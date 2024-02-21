@@ -1,68 +1,75 @@
 export default class Address {
-    private _street: string;
-    private _number: number;
-    private _zipCode: string;
-    private _neighborhood: string;
-    private _city: string;
-    private _state: string;
+  private _street: string;
+  private _number: number;
+  private _zipCode: string;
+  private _neighborhood: string;
+  private _city: string;
+  private _state: string;
 
-    constructor(street: string, number: number, zipCode: string, neighborhood: string, city: string, state: string) {
-        this._street = street;
-        this._number = number;
-        this._zipCode = zipCode;
-        this._neighborhood = neighborhood;
-        this._city = city;
-        this._state = state;
+  constructor(
+    street: string,
+    number: number,
+    zipCode: string,
+    neighborhood: string,
+    city: string,
+    state: string,
+  ) {
+    this._street = street;
+    this._number = number;
+    this._zipCode = zipCode;
+    this._neighborhood = neighborhood;
+    this._city = city;
+    this._state = state;
 
-        this.validate();
+    this.validate();
+  }
+
+  validate() {
+    if (!this._street) {
+      throw new Error('Street is required');
     }
-
-    validate() {
-        if (!this._street) {
-            throw new Error('Street is required');
-        }
-        if (!this._city) {
-            throw new Error('City is required');
-        }
-        if (!this._neighborhood) {
-            throw new Error('Neighborhood is required');
-        }
-        if (!this._state) {
-            throw new Error('State is required');
-        }
-        if (!this._zipCode) {
-            throw new Error('Zip code is required');
-        }
-        if (this._number <= 0) {
-            throw new Error('Number must be greater than 0');
-        }
+    if (!this._city) {
+      throw new Error('City is required');
     }
-
-    toString(): string {
-        return `${this._street}, ${this._number}, ${this._neighborhood}, ${this._city}, ${this._state}, ${this._zipCode}`;
+    if (!this._neighborhood) {
+      throw new Error('Neighborhood is required');
     }
-
-    get street(): string {
-        return this._street;
+    if (!this._state) {
+      throw new Error('State is required');
     }
-
-    get number(): number {
-        return this._number;
+    if (!this._zipCode) {
+      throw new Error('Zip code is required');
     }
-
-    get zipCode(): string {
-        return this._zipCode;
+    if (this._number <= 0) {
+      throw new Error('Number must be greater than 0');
     }
+  }
 
-    get neighborhood(): string {
-        return this._neighborhood;
-    }
+  toString(): string {
+    return `${this._street}, ${this._number}, ${this._neighborhood}, ${this._city}, ${this._state}, ${this._zipCode}`;
+  }
 
-    get city(): string {
-        return this._city;
-    }
+  get street(): string {
+    return this._street;
+  }
 
-    get state(): string {
-        return this._state;
-    }
+  get number(): number {
+    return this._number;
+  }
+
+  get zipCode(): string {
+    return this._zipCode;
+  }
+
+  get neighborhood(): string {
+    return this._neighborhood;
+  }
+
+  get city(): string {
+    return this._city;
+  }
+
+  get state(): string {
+    return this._state;
+  }
 }
